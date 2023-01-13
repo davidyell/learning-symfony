@@ -15,7 +15,7 @@ class Employee implements \JsonSerializable
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'EmployeeId')]
-    private ?int $id = null;
+    private ?int $employeeId;
 
     #[ORM\Column(name: 'LastName')]
     private string $lastName;
@@ -26,12 +26,12 @@ class Employee implements \JsonSerializable
     #[ORM\Column(name: 'Title')]
     private ?string $title = null;
 
-    #[ORM\Column(name: 'ReportsTo')]
-    #[ORM\ManyToOne(targetEntity: Employee::class)]
-    private ?Employee $reportsTo = null;
-
     #[ORM\OneToMany(targetEntity: Employee::class, mappedBy: 'reportsTo')]
     private Collection $directReports;
+
+    #[ORM\ManyToOne(targetEntity: Employee::class, inversedBy: 'directReports')]
+    #[ORM\JoinColumn(name: 'ReportsTo', referencedColumnName: 'EmployeeId')]
+    private ?Employee $reportsTo = null;
 
     #[ORM\Column(name: 'BirthDate')]
     private ?\DateTimeImmutable $birthDate = null;
@@ -66,18 +66,18 @@ class Employee implements \JsonSerializable
     /**
      * @return int|null
      */
-    public function getId(): ?int
+    public function getEmployeeId(): ?int
     {
-        return $this->id;
+        return $this->employeeId;
     }
 
     /**
      * @param int|null $id
      * @return Employee
      */
-    public function setId(?int $id): Employee
+    public function setEmployeeId(?int $employeeId): Employee
     {
-        $this->id = $id;
+        $this->employeeId = $employeeId;
         return $this;
     }
 
@@ -359,7 +359,7 @@ class Employee implements \JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'EmployeeId' => $this->getId(),
+            'EmployeeId' => $this->getEmployeeId(),
             'LastName' => $this->getLastName(),
             'FirstName' => $this->getFirstName(),
             'Title' => $this->getTitle(),
@@ -376,5 +376,17 @@ class Employee implements \JsonSerializable
             'Fax' => $this->getFax(),
             'Email' => $this->getEmail()
         ];
+    }
+
+    public function getManager(): ?int
+    {
+        return $this->manager;
+    }
+
+    public function setManager(?int $manager): self
+    {
+        $this->manager = $manager;
+
+        return $this;
     }
 }
