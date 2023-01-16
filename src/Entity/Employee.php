@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EmployeeRepository::class)]
 #[ORM\Table(name: 'employees')]
-class Employee implements \JsonSerializable
+class Employee
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -26,6 +26,9 @@ class Employee implements \JsonSerializable
     #[ORM\Column(name: 'Title')]
     private ?string $title = null;
 
+    /**
+     * @var Employee[] $directReports
+     */
     #[ORM\OneToMany(targetEntity: Employee::class, mappedBy: 'reportsTo')]
     private Collection $directReports;
 
@@ -348,45 +351,6 @@ class Employee implements \JsonSerializable
     public function setEmail(?string $email): Employee
     {
         $this->email = $email;
-        return $this;
-    }
-
-    /**
-     * Specify data which should be serialized to JSON
-     *
-     * // TODO: Does Symfony have a 'proper' way to do this?
-     */
-    public function jsonSerialize()
-    {
-        return [
-            'EmployeeId' => $this->getEmployeeId(),
-            'LastName' => $this->getLastName(),
-            'FirstName' => $this->getFirstName(),
-            'Title' => $this->getTitle(),
-            'ReportsTo' => $this->getReportsTo(),
-            'DirectReports' => $this->getDirectReports(),
-            'BirthDate' => $this->getBirthDate(),
-            'HireDate' => $this->getHireDate(),
-            'Address' => $this->getAddress(),
-            'City' => $this->getCity(),
-            'State' => $this->getState(),
-            'Country' => $this->getCountry(),
-            'PostalCode' => $this->getPostalCode(),
-            'Phone' => $this->getTelephone(),
-            'Fax' => $this->getFax(),
-            'Email' => $this->getEmail()
-        ];
-    }
-
-    public function getManager(): ?int
-    {
-        return $this->manager;
-    }
-
-    public function setManager(?int $manager): self
-    {
-        $this->manager = $manager;
-
         return $this;
     }
 }
