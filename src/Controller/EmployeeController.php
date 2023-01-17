@@ -23,6 +23,7 @@ class EmployeeController extends AbstractController
     )
     {
         // Add a context to the normalizer, so that it can handle circular references
+        // TODO: https://symfony.com/doc/current/components/serializer.html#handling-serialization-depth
         $defaultContext = [
             AbstractNormalizer::CIRCULAR_REFERENCE_LIMIT => 0,
             AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function (Employee $object, string $format, array $context) {
