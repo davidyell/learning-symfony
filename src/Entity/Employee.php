@@ -7,6 +7,7 @@ namespace App\Entity;
 use App\Repository\EmployeeRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 #[ORM\Entity(repositoryClass: EmployeeRepository::class)]
 #[ORM\Table(name: 'employees')]
@@ -29,9 +30,11 @@ class Employee
     /**
      * @var Employee[] $directReports
      */
+    #[MaxDepth(1)]
     #[ORM\OneToMany(targetEntity: Employee::class, mappedBy: 'reportsTo')]
     private Collection $directReports;
 
+    #[MaxDepth(1)]
     #[ORM\ManyToOne(targetEntity: Employee::class, inversedBy: 'directReports')]
     #[ORM\JoinColumn(name: 'ReportsTo', referencedColumnName: 'EmployeeId')]
     private ?Employee $reportsTo = null;
