@@ -23,6 +23,12 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
+    # Auto tag classes with produce baked goods
+    _instanceof:
+        App\Services\BakeryInterface:
+            tags:
+                - app.bakery
+
     app.cakeService:
         class: App\Services\CakeService
 
@@ -30,3 +36,7 @@ services:
         class: App\Services\GateauService
 
     App\Services\BakeryInterface: '@app.cakeService'
+
+    App\Listener\CakeListener:
+        tags:
+            - { name: kernel.event_listener, event: app.cake.chosen }

@@ -2,11 +2,12 @@
 
 namespace App\Services;
 
-use Psr\Log\LoggerInterface;
+use App\Event\ChooseCakeEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class CakeService implements BakeryInterface
 {
-    public function __construct(private LoggerInterface $logger, private DeliveryService $deliveryService)
+    public function __construct(private DeliveryService $deliveryService, private EventDispatcherInterface $eventDispatcher)
     {
     }
 
@@ -23,7 +24,8 @@ class CakeService implements BakeryInterface
 
         $this->deliveryService->setDeliveryType($this->deliveryService::FREE);
 
-        $this->logger->info('Bakery provided ' . $chosenItem);
+        $event = (new ChooseCakeEvent())->setChosenItem($chosenItem);
+        $this->eventDispatcher->dispatch($event, $event::NAME);
 
         return $chosenItem;
     }

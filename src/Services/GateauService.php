@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use Psr\Log\LoggerInterface;
+use App\Event\ChooseCakeEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class GateauService implements BakeryInterface
 {
-    public function __construct(private LoggerInterface $logger, private DeliveryService $deliveryService)
+    public function __construct(private DeliveryService $deliveryService, private EventDispatcherInterface $eventDispatcher)
     {
     }
 
@@ -24,7 +25,8 @@ class GateauService implements BakeryInterface
 
         $this->deliveryService->setDeliveryType($this->deliveryService::FREE);
 
-        $this->logger->info('Gateau provided ' . $chosenItem);
+        $event = (new ChooseCakeEvent())->setChosenItem($chosenItem);
+        $this->eventDispatcher->dispatch($event, $event::NAME);
 
         return $chosenItem;
     }
