@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Services\BakeryService;
+use App\Services\CakeService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DavesController extends AbstractController
 {
-    public function __construct(public BakeryService $bakeryService)
+    public function __construct(public CakeService $bakeryService)
     {
     }
 
